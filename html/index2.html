@@ -35,9 +35,8 @@
     //初始化着色器
     var program = initShader(gl, vertexShaderSource, fragShaderSource);
 
-    // aposLocation:索引,0
+    // 获取着色器中变量的索引
     const aposLocation = gl.getAttribLocation(program, 'a_pos');
-    console.log("aposLocation",aposLocation);
     const pointData = new Float32Array([
       0, 0, 1,
       0, 1, 0,
@@ -59,7 +58,10 @@
     // 参数3: 元素的数据类型
     // (index, size, type, normalized, stride, offset);
     gl.vertexAttribPointer(aposLocation, 3, gl.FLOAT, false, 0, 0);//设置点为2位
+    // 允许数据传递
     gl.enableVertexAttribArray(aposLocation);
+    // 参数2 first:从哪个点开始绘制
+    // 参数3 count:需要几个点绘制
     gl.drawArrays(gl.TRIANGLES, 0, 3);//绘制形状
 
     //声明初始化着色器函数
