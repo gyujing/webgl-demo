@@ -3,74 +3,54 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>使用WebGL绘制一个点</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>三角形</title>
 </head>
 
 <body>
-  <!--canvas标签创建一个宽高均为500像素，背景为蓝色的矩形画布-->
-  <canvas id="webgl" width="500" height="500" style="background-color: grey"></canvas>
+  <canvas id="webgl" width="500" height="500" style="background-color: grey;"></canvas>
+  <script type="module">
+    import {
+      vertexShaderSource,
+      fragShaderSource
+    } from './shader.js'
+    import * as glMatrix from '../gl-matrix-master/dist/esm/index.js'
 
-
-  <script>
-    //通过getElementById()方法获取canvas画布
-    var canvas = document.getElementById('webgl');
-    //通过方法getContext()获取WebGL上下文
-    var gl = canvas.getContext('webgl');
-
-    //顶点着色器源码
-    var vertexShaderSource = '' +
-      'attribute vec4 a_pos;' +
-      'void main(){' +
-      //顶点位置，位于坐标原点
-      '   gl_Position = a_pos;' +
-      '}';
-
-    //片元着色器源码
-    var fragShaderSource = '' +
-      'void main(){' +
-      //定义片元颜色
-      '   gl_FragColor = vec4(0.4,0.0,0.0,1.0);' +
-      '}';
-
-    //初始化着色器
+    var canvas = document.getElementById("webgl");
+    var gl = canvas.getContext("webgl");
     var program = initShader(gl, vertexShaderSource, fragShaderSource);
 
-    // aposLocation:索引,0
-    const aposLocation = gl.getAttribLocation(program, 'a_pos');
-    console.log("aposLocation",aposLocation);
-    const pointData = new Float32Array([
-      0, 0, 1,
-      0, 1, 0,
-      1, 0, 0
-    ]);
 
-    // 储存顶点数据或着色数据的WebGLBuffer对象
+
+    // 从外部向顶点着色器内传输数据
+    const aposLocation = gl.getAttribLocation(program, 'a_pos');
+    const pointData = new Float32Array([
+      0.0, 0.0, 1.0,
+      0.0, 1.0, 0.0,
+      1.0, 0.0, 0.0
+    ]);
     var buffer = gl.createBuffer();
-    // 绑定到目标
-    // 参数1：包含顶点属性的 Buffer，如顶点坐标，纹理坐标数据或顶点颜色数据
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    // 创建并初始化了 Buffer 对象的数据存储
-    // 参数2：类数组对象
-    // 参数3：usage
     gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.STATIC_DRAW);
     // 从当前绑定的缓冲区中读取顶点数据
     // 参数1：指定要修改的顶点属性的索引
     // 参数2：指定每个顶点属性的组成数量
-    // 参数3: 元素的数据类型
-    // (index, size, type, normalized, stride, offset);
+    // 参数3: 元素的数据类
     gl.vertexAttribPointer(aposLocation, 3, gl.FLOAT, false, 0, 0);//设置点为2位
     gl.enableVertexAttribArray(aposLocation);
+
+
     gl.drawArrays(gl.TRIANGLES, 0, 3);//绘制形状
 
-    //声明初始化着色器函数
-    function initShader(gl, vertexShaderSource, fragmentShaderSource) {
+
+    function initShader(gl, vertexShaderSource, fragShaderSource) {
       //创建顶点着色器对象
       var vertexShader = gl.createShader(gl.VERTEX_SHADER);
       //创建片元着色器对象
       var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
       //引入顶点、片元着色器源代码
       gl.shaderSource(vertexShader, vertexShaderSource);
-      gl.shaderSource(fragmentShader, fragmentShaderSource);
+      gl.shaderSource(fragmentShader, fragShaderSource);
       //编译顶点、片元着色器
       gl.compileShader(vertexShader);
       gl.compileShader(fragmentShader);
