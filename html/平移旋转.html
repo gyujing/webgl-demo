@@ -10,22 +10,6 @@
   <!--canvas标签创建一个宽高均为500像素，背景为蓝色的矩形画布-->
   <canvas id="webgl" width="500" height="500" style="background-color: grey"></canvas>
 
-  <!-- <script id="vertexShader" type="x-shader/x-vertex">
-      attribute vec4 a_pos;
-
-      void main(){ 
-         // 将角度转换为弧度
-         float radian = radians(30.0);
-
-         float cos = cos(radian);
-         float sin = sin(radian);
-
-         mat4 mx = mat4(1,0,0,0, 0,cos,-sin,0, 0,sin,cos,0, 0.0.0.1);
-         mat4 my = mat4(cos,0,-sin,0, 0,1,0,0, sin,0,cos,0, 0.0.0.1);
-
-         gl_Position = mx*my*a_pos;
-      };
-  </script> -->
   <script>
     //通过getElementById()方法获取canvas画布
     var canvas = document.getElementById('webgl');
@@ -109,10 +93,8 @@
     // 从第5个点开始，绘制4个点成矩形
     gl.drawArrays(gl.LINE_LOOP, 4, 4);//绘制形状
     // 绘制直线
-    gl.drawArrays(gl.LINES, 8, 2);//绘制形状
-    gl.drawArrays(gl.LINES, 10, 2);//绘制形状
-    gl.drawArrays(gl.LINES, 12, 2);//绘制形状
-    gl.drawArrays(gl.LINES, 14, 2);//绘制形状
+    gl.drawArrays(gl.LINES, 8, 8);//绘制形状
+   
 
     //声明初始化着色器函数
     function initShader(gl, vertexShaderSource, fragmentShaderSource) {

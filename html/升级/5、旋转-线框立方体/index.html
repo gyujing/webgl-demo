@@ -4,16 +4,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>三维三角形</title>
+  <title>立方体</title>
 </head>
 
 <body>
-  <canvas id="webgl" width="500" height="500" style="background-color: grey;"></canvas>
+  <h3>旋转立方体</h3>
+  <canvas id="webgl" width="500" height="500" style="background-color: rgba(197, 194, 194, 1);"></canvas>
 
   <script id="vertexShader" type="x-shader/x-vertex">
       attribute vec4 a_pos;
       void main(){
-        gl_Position =  a_pos;
+         //旋转角度30度转化为弧度值
+         float radian = radians(30.0);
+         // 余弦值
+         float cos = cos(radian);
+         // 正弦值
+         float sin = sin(radian);
+         // 旋转矩阵
+         mat4 mx = mat4(1,0,0,0, 0,cos,-sin,0, 0,sin,cos,0, 0,0,0,1);
+         mat4 my = mat4(cos,0,sin,0, 0,1,0,0, -sin,0,cos,0, 0,0,0,1);
+
+        gl_Position = mx * my * a_pos;
       }
   </script>
 
@@ -23,11 +34,9 @@
       }
   </script>
   <script type="module">
-    import * as glMatrix from '../gl-matrix-master/dist/esm/index.js'
 
     var canvas = document.getElementById("webgl");
     var gl = canvas.getContext("webgl");
-
 
     var vertexShaderSource = document.getElementById("vertexShader").innerText;
     var fragShaderSource = document.getElementById("fragmentShader").innerText;
@@ -37,15 +46,36 @@
 
     // 从外部向顶点着色器内传输数据
     const aposLocation = gl.getAttribLocation(program, 'a_pos');
-    const pointData = new Float32Array([
-      0.0, 0.0, 1.0,
-      0.0, 1.0, 0.0,
-      1.0, 0.0, 0.0
+    const data = new Float32Array([
+      // 立方体 - 前平面
+      0.5, 0.5, 0.5,
+      -0.5, 0.5, 0.5,
+      -0.5, -0.5, 0.5,
+      0.5, -0.5, 0.5,
+      // 立方体 - 后平面
+      0.5, 0.5, -0.5,
+      -0.5, 0.5, -0.5,
+      -0.5, -0.5, -0.5,
+      0.5, -0.5, -0.5,
+      // 立方体 - 平面间连接线1
+      0.5, 0.5, 0.5,
+      0.5, 0.5, -0.5,
+      // 立方体 - 平面间连接线2
+      -0.5, 0.5, 0.5,
+      -0.5, 0.5, -0.5,
+      // 立方体 - 平面间连接线3
+      -0.5, -0.5, 0.5,
+      -0.5, -0.5, -0.5,
+      // 立方体 - 平面间连接线4
+      0.5, -0.5, 0.5,
+      0.5, -0.5, -0.5,
+
     ]);
+
     var buffer = gl.createBuffer();
     // 激活哪个缓存区,就将数据放在哪个缓存区(缓存区有多个)
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, pointData, gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
     // 从当前绑定的缓冲区中读取顶点数据
     // 参数1：指定要修改的顶点属性的索引
     // 参数2：指定每个顶点属性的组成数量
@@ -54,8 +84,11 @@
     gl.enableVertexAttribArray(aposLocation);
 
 
-    gl.drawArrays(gl.TRIANGLES, 0, 3);//绘制形状
-
+    // mode,start,count
+    gl.drawArrays(gl.LINE_LOOP, 0, 4);//绘制矩形边框
+    gl.drawArrays(gl.LINE_LOOP, 4, 4);//绘制矩形边框
+    gl.drawArrays(gl.LINES, 8, 8);//绘制矩形填充
+ 
 
     function initShader(gl, vertexShaderSource, fragShaderSource) {
       //创建顶点着色器对象
