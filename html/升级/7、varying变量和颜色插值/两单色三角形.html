@@ -82,9 +82,9 @@
     gl.vertexAttribPointer(aposLocation, 2, gl.FLOAT, false, 0, 0);//设置点为2位
     gl.enableVertexAttribArray(aposLocation);
 
-
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 3);//绘制矩形填充
-    gl.drawArrays(gl.TRIANGLE_FAN, 3, 3);//绘制矩形填充
+    // 参0：mode，参1:offet，参2：count
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, 3);//绘制三角形填充
+    gl.drawArrays(gl.TRIANGLE_FAN, 3, 3);//绘制三角形填充
 
 
     function initShader(gl, vertexShaderSource, fragShaderSource) {

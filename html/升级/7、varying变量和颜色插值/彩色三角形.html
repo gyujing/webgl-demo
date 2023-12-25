@@ -76,10 +76,7 @@
     gl.enableVertexAttribArray(aposLocation);
 
 
-
-
-    // gl.drawArrays(gl.LINE_LOOP, 0, 4);//绘制矩形边框
-    gl.drawArrays(gl.TRIANGLE_FAN, 0, 3);//绘制矩形填充
+    gl.drawArrays(gl.TRIANGLE_FAN, 0, 3);//绘制三角形填充
 
 
     function initShader(gl, vertexShaderSource, fragShaderSource) {
